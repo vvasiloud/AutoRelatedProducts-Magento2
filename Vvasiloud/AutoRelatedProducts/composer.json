@@ -1,0 +1,20 @@
+{
+    "name": "vvasiloud/autorelatedproducts",
+    "description": "",
+    "authors": [
+        {
+            "name": "Vasilis Vasiloudis",
+            "email": "vvasiloudis@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Vvasiloud\\AutoRelatedProducts\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
