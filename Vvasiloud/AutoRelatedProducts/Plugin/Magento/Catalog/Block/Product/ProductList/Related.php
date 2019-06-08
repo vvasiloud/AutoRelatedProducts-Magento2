@@ -26,16 +26,19 @@ class Related {
 
 	protected $_categoryFactory;
 	protected $_registry;
+	protected $_stockFilter;
 	protected $_dataHelper;
 	
 	public function __construct(
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         \Magento\Framework\Registry $registry,
+	\Magento\CatalogInventory\Helper\Stock $stockFilter,
 		\Vvasiloud\AutoRelatedProducts\Helper\Data $dataHelper
     ) {
 		$this->_categoryFactory = $categoryFactory;
 		$this->_registry = $registry;
 		$this->_dataHelper = $dataHelper;
+		$this->_stockFilter = $stockFilter;
     }
 	
 	public function afterGetItems(
@@ -66,10 +69,12 @@ class Related {
 				$collection = $category->getProductCollection()->addAttributeToSelect('*')->addStoreFilter();
 				$collection->addAttributeToFilter('visibility', \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH);
 				$collection->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
-
+				
 				if ($productCount) {
 					$collection->setPageSize($productCount);
 				}
+				
+				$this->_stockFilter->addInStockFilterToCollection($collection);
 				
 				return $collection;
 			}
