@@ -75,6 +75,7 @@ class Related {
 				}
 				
 				$this->_stockFilter->addInStockFilterToCollection($collection);
+				$collection ->getSelect()->orderRand();
 				
 				return $collection;
 			}
