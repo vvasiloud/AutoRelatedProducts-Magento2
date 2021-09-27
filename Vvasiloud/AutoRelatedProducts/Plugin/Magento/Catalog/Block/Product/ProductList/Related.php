@@ -66,6 +66,9 @@ class Related {
 				$collection = $category->getProductCollection()->addAttributeToSelect('*')->addStoreFilter();
 				$collection->addAttributeToFilter('visibility', \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH);
 				$collection->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+				
+				$productId = $product->getId(); //get current product ID
+				$collection->removeItemByKey($productId); //remove current product ID from collection
 
 				if ($productCount) {
 					$collection->setPageSize($productCount);
