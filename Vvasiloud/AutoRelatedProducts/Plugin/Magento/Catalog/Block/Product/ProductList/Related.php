@@ -31,11 +31,12 @@ class Related {
 	public function __construct(
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         \Magento\Framework\Registry $registry,
-		\Vvasiloud\AutoRelatedProducts\Helper\Data $dataHelper
+        \Vvasiloud\AutoRelatedProducts\Helper\Data $dataHelper
     ) {
 		$this->_categoryFactory = $categoryFactory;
 		$this->_registry = $registry;
 		$this->_dataHelper = $dataHelper;
+		
     }
 	
 	public function afterGetItems(
@@ -54,6 +55,7 @@ class Related {
 		$isEnabled = $this->_dataHelper->isEnabled();
 		if(count( $loadedCollection ) == 0 && $isEnabled){ // if there are no related products set manually generate automatically
 			$product = $this->_registry->registry('current_product');//get current product
+			$productId = $product->getId();  //get current product id
 			
 			$productCategories = $product->getCategoryIds();
 			
@@ -66,11 +68,14 @@ class Related {
 				$collection = $category->getProductCollection()->addAttributeToSelect('*')->addStoreFilter();
 				$collection->addAttributeToFilter('visibility', \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH);
 				$collection->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+				$collection->addAttributeToFilter('entity_id', ['neq' => $productId]);//exclude current product id
 
 				if ($productCount) {
 					$collection->setPageSize($productCount);
 				}
 				
+				$collection->getSelect()->orderRand();  //randomize the collection
+
 				return $collection;
 			}
 		};
